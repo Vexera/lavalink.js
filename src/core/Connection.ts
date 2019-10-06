@@ -29,6 +29,7 @@ export default class Connection {
 
   public ws!: WebSocket;
   public reconnectTimeout: number = 100; // TODO: remove in next major version
+  public resumed: boolean = false;
 
   private _backoff!: backoff.Backoff;
 
@@ -41,10 +42,14 @@ export default class Connection {
         .catch(e => this.node.emit('error', e));
     },
     close: (code: number, reason: string) => {
+      this.resumed = false;
       this.node.emit('close', code, reason);
       this._reconnect();
     },
-    upgrade: (req: IncomingMessage) => this.node.emit('upgrade', req),
+    upgrade: (req: IncomingMessage) => {
+      this.resumed = req.headers['session-resumed'] === 'true';
+      if (this.resumed) this.node.emit('resumed');
+    },
     message: (d: WebSocket.Data) => {
       if (Array.isArray(d)) d = Buffer.concat(d);
       else if (d instanceof ArrayBuffer) d = Buffer.from(d);
