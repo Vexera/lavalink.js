@@ -44,7 +44,7 @@ export default class Player extends EventEmitter {
   public readonly node: Node;
   public guildID: string;
   public status: Status = Status.INSTANTIATED;
-  public state: PlayerState | undefined;
+  public state?: PlayerState;
 
   constructor(node: Node, guildID: string) {
     super();
