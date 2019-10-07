@@ -35,10 +35,16 @@ export interface JoinOptions {
   deaf?: boolean;
 }
 
+export interface PlayerState {
+  time: number;
+  position: number;
+}
+
 export default class Player extends EventEmitter {
   public readonly node: Node;
   public guildID: string;
   public status: Status = Status.INSTANTIATED;
+  public state: PlayerState | undefined;
 
   constructor(node: Node, guildID: string) {
     super();
@@ -63,6 +69,10 @@ export default class Player extends EventEmitter {
           this.status = Status.UNKNOWN;
           break;
       }
+    });
+
+    this.on('playerUpdate', (d) => {
+      this.state = d.state;
     });
   }
 
