@@ -31,6 +31,7 @@ export interface BaseNodeOptions {
     ws?: string | { url: string, options: ConnectionOptions };
   };
   host?: string;
+  player?: any;
 }
 
 export default abstract class BaseNode extends EventEmitter {
@@ -49,11 +50,15 @@ export default abstract class BaseNode extends EventEmitter {
 
   private _expectingConnection: Set<string> = new Set();
 
-  constructor({ password, userID, shardCount, hosts, host }: BaseNodeOptions) {
+  constructor({ password, userID, shardCount, hosts, host, player }: BaseNodeOptions) {
     super();
     this.password = password;
     this.userID = userID;
     this.shardCount = shardCount;
+
+    if (player) {
+      this.players = new PlayerStore(this, player);
+    }
 
     if (host) {
       this.http = new Http(this, `http://${host}`);
