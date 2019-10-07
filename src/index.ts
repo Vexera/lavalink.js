@@ -7,7 +7,7 @@ import Node, { NodeOptions } from './Node';
 
 import Connection, { Options as ConnectionOptions } from './core/Connection';
 import Http, { LoadType, TrackResponse, PlaylistInfo, Track, HTTPError } from './core/Http';
-import Player, { Status, PlayerOptions, EqualizerBand, JoinOptions } from './core/Player';
+import Player, { Status, PlayerOptions, EqualizerBand, JoinOptions, PlayerState } from './core/Player';
 
 export default Node;
 export {
@@ -38,4 +38,5 @@ export {
   PlayerOptions,
   EqualizerBand,
   JoinOptions,
+  PlayerState
 }
