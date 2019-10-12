@@ -9,11 +9,13 @@ const gateway = new Gateway(process.env.TOKEN);
 const cluster = new Cluster({
   nodes: [
     {
+      name: 'node1',
       password: 'youshallnotpass',
       userID: process.env.USER_ID,
       host: 'localhost:8080',
     },
     {
+      name: 'node2',
       password: 'youshallnotpass',
       userID: process.env.USER_ID,
       host: 'localhost:8081',
@@ -42,7 +44,7 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
   if (m.content === 'decode') {
     const trackResponse = await cluster.get('281630801660215296').node.load('https://www.youtube.com/playlist?list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67');
     const decoded = await cluster.get('281630801660215296').node.decode(trackResponse.tracks.map(t => t.track));
-    console.log(decoded.every((e, i) => typeof e === 'object'));
+    console.log(decoded.every((e: any) => typeof e === 'object'));
   }
 
   if (m.content === 'play') {
@@ -51,7 +53,7 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
   }
 
   if (m.content === 'stats') {
-    console.log(cluster.nodes.map(node => node.stats));
+    console.log([...cluster.nodes.values()].map(node => node.stats));
   }
 
   if (m.content === 'reconnect') {

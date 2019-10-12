@@ -2,6 +2,7 @@ import Cluster from './base/Cluster';
 import BaseNode, { BaseNodeOptions } from './base/Node';
 
 export interface ClusterNodeOptions extends BaseNodeOptions {
+  name: string;
   tags?: Iterable<string>;
 }
 
@@ -29,11 +30,13 @@ export interface Stats {
 
 export default class ClusterNode extends BaseNode {
   public tags: Set<string>;
+  public name: string;
   public stats?: Stats;
 
   constructor(public readonly cluster: Cluster, options: ClusterNodeOptions) {
     super(options);
     this.tags = new Set(options.tags || []);
+    this.name = options.name;
     this.on('stats', stats => this.stats = stats);
   }
 
