@@ -1,4 +1,5 @@
 import Node, { VoiceServerUpdate, VoiceStateUpdate } from '../base/Node';
+import ClusterNode from '../ClusterNode';
 import { Track } from './Http';
 import { EventEmitter } from 'events';
 
@@ -41,7 +42,7 @@ export interface PlayerState {
 }
 
 export default class Player extends EventEmitter {
-  public readonly node: Node;
+  public readonly node: ClusterNode | Node;
   public guildID: string;
   public channelID: string | null = null;
   public status: Status = Status.INSTANTIATED;
