@@ -43,6 +43,7 @@ export interface PlayerState {
 export default class Player extends EventEmitter {
   public readonly node: Node;
   public guildID: string;
+  public channelID: string | null = null;
   public status: Status = Status.INSTANTIATED;
   public state?: PlayerState;
 
@@ -117,6 +118,8 @@ export default class Player extends EventEmitter {
   public join(channel: string | null, { deaf = false, mute = false }: JoinOptions = {}) {
     this.node.voiceServers.delete(this.guildID);
     this.node.voiceStates.delete(this.guildID);
+
+    this.channelID = channel;
 
     return this.node.send(this.guildID, {
       op: 4,

@@ -31,7 +31,6 @@ export interface BaseNodeOptions {
     ws?: string | { url: string, options: ConnectionOptions };
   };
   host?: string;
-  player?: any;
 }
 
 export default abstract class BaseNode extends EventEmitter {
@@ -50,15 +49,11 @@ export default abstract class BaseNode extends EventEmitter {
 
   private _expectingConnection: Set<string> = new Set();
 
-  constructor({ password, userID, shardCount, hosts, host, player }: BaseNodeOptions) {
+  constructor({ password, userID, shardCount, hosts, host }: BaseNodeOptions) {
     super();
     this.password = password;
     this.userID = userID;
     this.shardCount = shardCount;
-
-    if (player) {
-      this.players = new PlayerStore(this, player);
-    }
 
     if (host) {
       this.http = new Http(this, `http://${host}`);
@@ -90,6 +85,10 @@ export default abstract class BaseNode extends EventEmitter {
     if (packet.user_id !== this.userID) return Promise.resolve(false);
 
     if (packet.channel_id) {
+      if (this.players.has(packet.guild_id)) {
+        this.players.get(packet.guild_id).channelID = packet.channel_id;
+      }
+
       this.voiceStates.set(packet.guild_id, packet.session_id);
       return this._tryConnection(packet.guild_id);
     } else {
