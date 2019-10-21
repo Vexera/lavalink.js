@@ -42,7 +42,7 @@ export interface PlayerState {
 }
 
 export default class Player extends EventEmitter {
-  public readonly node: ClusterNode | Node;
+  public readonly node: Node;
   public guildID: string;
   public channelID: string | null = null;
   public status: Status = Status.INSTANTIATED;
