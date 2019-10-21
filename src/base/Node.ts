@@ -34,14 +34,14 @@ export interface BaseNodeOptions {
 }
 
 export default abstract class BaseNode extends EventEmitter {
-  public abstract send(guildID: string, packet: any): Promise<any>;
+  public abstract send: (guildID: string, packet: any) => Promise<any>;
 
   public password: string;
   public userID: string;
   public shardCount?: number;
 
   public connection?: Connection;
-  public players: PlayerStore = new PlayerStore(this);
+  public players: PlayerStore<this> = new PlayerStore(this);
   public http?: Http;
 
   public voiceStates: Map<string, string> = new Map();

@@ -41,14 +41,14 @@ export interface PlayerState {
   position: number;
 }
 
-export default class Player extends EventEmitter {
-  public readonly node: Node;
+export default class Player<T extends Node = Node> extends EventEmitter {
+  public readonly node: T;
   public guildID: string;
   public channelID: string | null = null;
   public status: Status = Status.INSTANTIATED;
   public state?: PlayerState;
 
-  constructor(node: Node, guildID: string) {
+  constructor(node: T, guildID: string) {
     super();
     this.node = node;
     this.guildID = guildID;
