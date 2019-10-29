@@ -48,6 +48,8 @@ export default class Player<T extends Node = Node> extends EventEmitter {
   public status: Status = Status.INSTANTIATED;
   public state?: PlayerState;
   public track: Track | string | null = null;
+  public volume: number = 100;
+  public bands: EqualizerBand[] | null = null;
 
   constructor(node: T, guildID: string) {
     super();
@@ -149,12 +151,16 @@ export default class Player<T extends Node = Node> extends EventEmitter {
     this.track = track;
   }
 
-  public setVolume(vol: number) {
-    return this.send('volume', { volume: vol });
+  public async setVolume(volume: number) {
+    await this.send('volume', { volume });
+
+    this.volume = volume;
   }
 
-  public setEqualizer(bands: EqualizerBand[]) {
-    return this.send('equalizer', { bands });
+  public async setEqualizer(bands: EqualizerBand[]) {
+    await this.send('equalizer', { bands });
+
+    this.bands = bands;
   }
 
   public seek(position: number) {
