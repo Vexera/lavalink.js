@@ -47,7 +47,6 @@ export default class Player<T extends Node = Node> extends EventEmitter {
   public channelID: string | null = null;
   public status: Status = Status.INSTANTIATED;
   public state?: PlayerState;
-  public track: Track | string | null = null;
   public volume: number = 100;
   public bands: EqualizerBand[] | null = null;
 
@@ -61,7 +60,6 @@ export default class Player<T extends Node = Node> extends EventEmitter {
         case EventType.TRACK_END:
           if (d.reason !== 'REPLACED') {
             this.status = Status.ENDED;
-            this.track = null;
           }
           break;
         case EventType.TRACK_EXCEPTION:
@@ -148,7 +146,6 @@ export default class Player<T extends Node = Node> extends EventEmitter {
     });
 
     this.status = Status.PLAYING;
-    this.track = track;
   }
 
   public async setVolume(volume: number) {
