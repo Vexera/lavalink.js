@@ -1,5 +1,5 @@
 {
-  "name": "lavalink",
+  "name": "@vexera/lavalink",
   "version": "2.8.2",
   "description": "A Lavalink client for JavaScript.",
   "main": "dist/index.js",
