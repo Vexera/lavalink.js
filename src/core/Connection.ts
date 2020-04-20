@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import backoff = require('backoff');
-import Node from '../base/Node';
+import BaseNode from '../base/Node';
 import { IncomingMessage } from 'http';
 
 interface Sendable {
@@ -21,7 +21,7 @@ export interface Options extends WebSocket.ClientOptions {
   resumeTimeout?: number;
 }
 
-export default class Connection<T extends Node = Node> {
+export default class Connection<T extends BaseNode = BaseNode> {
   public readonly node: T;
   public url: string;
   public options: Options;
@@ -130,6 +130,20 @@ export default class Connection<T extends Node = Node> {
 
       if (this.ws.readyState === WebSocket.OPEN) this._send(send);
       else this._queue.push(send);
+    });
+  }
+
+  public close(code?: number, data?: string): Promise<void> {
+    if (!this.ws) return Promise.resolve();
+
+    this.ws.removeListener('close', this._listeners.close);
+    return new Promise(resolve => {
+      this.ws.once('close', (code: number, reason: string) => {
+        this.node.emit('close', code, reason);
+        resolve();
+      });
+
+      this.ws.close(code, data);
     });
   }
 

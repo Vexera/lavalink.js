@@ -1,5 +1,4 @@
-import Node, { VoiceServerUpdate, VoiceStateUpdate } from '../base/Node';
-import ClusterNode from '../ClusterNode';
+import BaseNode, { VoiceServerUpdate, VoiceStateUpdate } from '../base/Node';
 import { Track } from './Http';
 import { EventEmitter } from 'events';
 
@@ -14,6 +13,7 @@ export enum Status {
 }
 
 export enum EventType {
+  TRACK_START = 'TrackStartEvent',
   TRACK_END = 'TrackEndEvent',
   TRACK_EXCEPTION = 'TrackExceptionEvent',
   TRACK_STUCK = 'TrackStuckEvent',
@@ -41,7 +41,7 @@ export interface PlayerState {
   position: number;
 }
 
-export default class Player<T extends Node = Node> extends EventEmitter {
+export default class Player<T extends BaseNode = BaseNode> extends EventEmitter {
   public readonly node: T;
   public guildID: string;
   public channelID: string | null = null;
@@ -57,6 +57,9 @@ export default class Player<T extends Node = Node> extends EventEmitter {
 
     this.on('event', (d) => {
       switch (d.type) {
+        case EventType.TRACK_START:
+          this.status = Status.PLAYING
+          break;
         case EventType.TRACK_END:
           if (d.reason !== 'REPLACED') {
             this.status = Status.ENDED;
@@ -105,7 +108,7 @@ export default class Player<T extends Node = Node> extends EventEmitter {
     return this.node.voiceServers.get(this.guildID);
   }
 
-  public async moveTo(node: Node) {
+  public async moveTo(node: BaseNode) {
     if (this.node === node) return;
     if (!this.voiceServer || !this.voiceState) throw new Error('no voice state/server data to move');
 

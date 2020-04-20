@@ -1,6 +1,6 @@
 {
   "name": "@vexera/lavalink",
-  "version": "2.8.2",
+  "version": "2.10.0",
   "description": "A Lavalink client for JavaScript.",
   "main": "dist/index.js",
   "types": "typings/index.d.ts",
