@@ -49,6 +49,6 @@ export default class ClusterNode extends BaseNode {
 
   public async destroy(code?: number, data?: string): Promise<void> {
     await super.destroy(code, data);
-    this.cluster.nodes.splice(this.cluster.nodes.indexOf(this), 1);
+    this.cluster.nodes.delete(this.name);
   }
 }
